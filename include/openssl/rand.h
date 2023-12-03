@@ -37,7 +37,7 @@ extern "C" {
 # define RAND_DRBG_STRENGTH             256
 
 # ifndef OPENSSL_NO_DEPRECATED_3_0
-struct rand_meth_st {
+struct rand_meth_st {//随机方法结构体
     int (*seed) (const void *buf, int num);
     int (*bytes) (unsigned char *buf, int num);
     void (*cleanup) (void);
