@@ -8,10 +8,12 @@ typedef struct Student_st
     char *name;
     int age;
     char *otherInfo;
-}Student;
+} Student;
 
 
 DEFINE_STACK_OF(Student)
+
+typedef STACK_OF(Student) Students;
 
 Student *Student_Malloc()
 {
@@ -39,7 +41,7 @@ void Student_Free(Student *a)
     free(a);
 }
 
-static int Student_cmp(Student *a,Student *b)
+static int Student_cmp(const Student *a, const Student *b)
 {
     int ret;
 
