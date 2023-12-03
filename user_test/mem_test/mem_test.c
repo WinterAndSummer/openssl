@@ -1,20 +1,21 @@
-include <openssl/crypto.h>
-#include <openssl/bio.h>
+#include <string.h>
+#include <openssl/crypto.h>
 int main()
 {
     char *p;
-    BIO *b;
-    CRYPTO_malloc_debug_init();
-    CRYPTO_set_mem_debug_options(V_CRYPTO_MDEBUG_ALL);
-    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
+    int i;
     p=OPENSSL_malloc(4);
-    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_OFF);
-    b=BIO_new_file("leak.log","w");
-    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
-    CRYPTO_mem_leaks(b);
+    p=OPENSSL_remalloc(p,40);
+    p=OPENSSL_realloc(p,32);
+    for(i=0;i<32;i++)
+        memset(&p[i],i,1);
+    /* realloc 时将以前的内存区清除(置乱) */
+    p=OPENSSL_realloc_clean(p,32,77);
+    p=OPENSSL_remalloc(p,40);
+    OPENSSL_malloc_locked(3);
     OPENSSL_free(p);
-    BIO_free(b);
     return 0;
-}
+} 
+
 
 
